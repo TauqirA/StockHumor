@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 import yahoofinance.*;
 import java.math.BigDecimal;
 
@@ -16,6 +17,8 @@ public class MyActivity extends Activity {
         setContentView(R.layout.activity_my);
         Stock stock = YahooFinance.get("INTC");
         BigDecimal price = stock.getQuote(true).getPrice();
+        TextView textElement = (TextView) findViewById(R.id.word);
+        textElement.setText(""+price);
     }
 
 
