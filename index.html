@@ -16,7 +16,8 @@
     <!-- ION ICONS STYLES -->
     <link href="assets/css/ionicons.css" rel="stylesheet" />
      <!-- FONT AWESOME ICONS STYLES -->
-    <link href="assets/css/font-awesome.css" rel="stylesheet" />    <!-- CUSTOM CSS -->
+    <link href="assets/css/font-awesome.css" rel="stylesheet" />
+    <!-- CUSTOM CSS -->
     <link href="assets/css/style.css" rel="stylesheet" />
      <!-- IE10 viewport hack  -->
     <script src="assets/js/ie-10-view-port.js"></script>
@@ -63,7 +64,7 @@
 							 
 							  <div class="form-group">
 								<label for="date">Date of Purchase:</label>
-								<input type="date" class="form-control" id="dop">
+								<input type="text" class="form-control" id="dop">
 							  </div>
 							 
 							  <div class="form-group">
@@ -71,12 +72,41 @@
 								<input type="number" class="form-control" id="stocks" placeholder="Enter # of Stocks here">
 							  </div>
 							 
-							  <button type="button" class="btn btn-success">Give me Tweet</button>
+							  <button type="button" class="btn btn-success" onClick="getData();">Give me Tweet</button>
+							  <script> function getData() {
+    var url = "http://query.yahooapis.com/v1/public/yql";
+    var symbol = $("#name").val();
+    var startDate = $("#dop").val();
+    var endDate= '2015-04-11';
+    var str = 'select * from yahoo.finance.historicaldata where symbol in ("' + symbol + '") and startDate = "' + startDate + '" and endDate = "' + endDate + '"';
+    var data = encodeURIComponent(str);
+
+    $.getJSON(url, 'q=' + data + "&format=json&diagnostics=true&env=http://datatables.org/alltables.env")
+        .done(function (data) {
+        $("#d1").text("Old Price: " + JSON.stringify(data.query.results.quote[data.query.results.quote.length-1].Open));
+    })
+        .fail(function (jqxhr, textStatus, error) {
+        var err = textStatus + ", " + error;
+            $("#d1").text('Request filled: ' + err);
+    });
+     var data = encodeURIComponent("select * from yahoo.finance.quotes where symbol in ('" + symbol + "')");
+
+    $.getJSON(url, 'q=' + data + "&format=json&diagnostics=true&env=http://datatables.org/alltables.env")
+        .done(function (data) {
+            $('#d2').text("Current Price: " + data.query.results.quote.LastTradePriceOnly);
+        })
+        .fail(function (jqxhr, textStatus, error) {
+            var err = textStatus + ", " + error;
+            console.log('Request failed: ' + err);
+        });
+	document.getElementById("link").innerHTML = "<a href=\"https://twitter.com/intent/tweet?button_hashtag=bitcamp&text="+"THE WORDS" +"\"class=\"twitter-hashtag-button\">Tweet #Bitcamp</a>";
+}
+</script>
 							  
 						</form>
-						<a href="https://twitter.com/intent/tweet?button_hashtag=TwitterStories&text=Hello" class="twitter-hashtag-button">Tweet #Bitcamp</a>
+						<div id="link">
 <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
-
+</div>
 
 						<a class="twitter-timeline" href="https://twitter.com/hashtag/bitcamp" data-widget-id="586894716127547392">#bitcamp Tweets</a>
 <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
@@ -117,7 +147,8 @@
 <div class="row text-center">
     <div class="col-lg-12 col-md-12 col-sm-12">
                              &copy; 2015 Bitcamp Project using<a href="http://www.designbootstrap.com/" target="_blank"> DesignBootstrap </a> 
-                         </div>
+                         </div>
+
     </div>
             </div>
     </footer>
