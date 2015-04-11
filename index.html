@@ -81,10 +81,14 @@
     var endDate= '2015-04-11';
     var str = 'select * from yahoo.finance.historicaldata where symbol in ("' + symbol + '") and startDate = "' + startDate + '" and endDate = "' + endDate + '"';
     var data = encodeURIComponent(str);
+	var old = 0;
+	var curr = 0;
+
 
     $.getJSON(url, 'q=' + data + "&format=json&diagnostics=true&env=http://datatables.org/alltables.env")
         .done(function (data) {
-        $("#d1").text("Old Price: " + JSON.stringify(data.query.results.quote[data.query.results.quote.length-1].Open));
+		old = parseFloat(data.query.results.quote[data.query.results.quote.length-1].Open);
+        $("#d1").text("Old Price: " + old);
     })
         .fail(function (jqxhr, textStatus, error) {
         var err = textStatus + ", " + error;
@@ -94,7 +98,8 @@
 
     $.getJSON(url, 'q=' + data + "&format=json&diagnostics=true&env=http://datatables.org/alltables.env")
         .done(function (data) {
-            $('#d2').text("Current Price: " + data.query.results.quote.LastTradePriceOnly);
+		curr = parseFloat(data.query.results.quote.LastTradePriceOnly);
+            $('#d2').text("Current Price: " + curr);
         })
         .fail(function (jqxhr, textStatus, error) {
             var err = textStatus + ", " + error;
