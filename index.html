@@ -65,7 +65,7 @@
 							 
 							  <div class="form-group">
 								<label for="date">Date of Purchase:</label>
-								<input type="text" class="form-control" id="dop">
+								<input type="date" class="form-control" id="dop">
 							  </div>
 							 
 							  <div class="form-group">
@@ -83,29 +83,41 @@
     var data = encodeURIComponent(str);
 	var old = 0;
 	var curr = 0;
-
+	var today = new Date();
+    var dd = today.getDate();
+    var mm = today.getMonth()+1; //January is 0!
+    var yyyy = today.getFullYear();
+    if(dd<10) {
+        dd='0'+dd
+    } 
+    if(mm<10) {
+        mm='0'+mm
+    } 
+    endDate = yyyy+'-'+mm+'-'+dd;
 
     $.getJSON(url, 'q=' + data + "&format=json&diagnostics=true&env=http://datatables.org/alltables.env")
         .done(function (data) {
 		old = parseFloat(data.query.results.quote[data.query.results.quote.length-1].Open);
         $("#d1").text("Old Price: " + old);
-    })
-        .fail(function (jqxhr, textStatus, error) {
-        var err = textStatus + ", " + error;
-            $("#d1").text('Request filled: ' + err);
-    });
-     var data = encodeURIComponent("select * from yahoo.finance.quotes where symbol in ('" + symbol + "')");
+    var data = encodeURIComponent("select * from yahoo.finance.quotes where symbol in ('" + symbol + "')");
 
     $.getJSON(url, 'q=' + data + "&format=json&diagnostics=true&env=http://datatables.org/alltables.env")
         .done(function (data) {
 		curr = parseFloat(data.query.results.quote.LastTradePriceOnly);
             $('#d2').text("Current Price: " + curr);
+				document.getElementById("link").innerHTML = "<a href=\"https://twitter.com/intent/tweet?button_hashtag=bitcamp&text="+old+" "+curr+"\"class=\"twitter-hashtag-button\">Tweet #Bitcamp</a>";
         })
         .fail(function (jqxhr, textStatus, error) {
             var err = textStatus + ", " + error;
             console.log('Request failed: ' + err);
         });
-	document.getElementById("link").innerHTML = "<a href=\"https://twitter.com/intent/tweet?button_hashtag=bitcamp&text="+"THE WORDS" +"\"class=\"twitter-hashtag-button\">Tweet #Bitcamp</a>";
+	})
+        .fail(function (jqxhr, textStatus, error) {
+        var err = textStatus + ", " + error;  
+            $("#d1").text('Request filled: ' + err);
+    });
+     
+		
 }
 </script>
 							  
