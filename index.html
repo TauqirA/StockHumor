@@ -21,29 +21,9 @@
     <link href="assets/css/style.css" rel="stylesheet" />
      <!-- IE10 viewport hack  -->
     <script src="assets/js/ie-10-view-port.js"></script>
-    <!-- HTML5 Shiv and Respond.js for IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
+    
 </head>
 <body>
-    <!-- HEADER SECTION START-->
-   <header id="header">
-        <div class="container" >
-                <div class="row"  >
-                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 logo-wrapper">
-                         <img src="assets/img/logo.png" alt="" />
-                     </div>                 
-                </div>
-                      
-                </div>
-              
-                
-            </div>
-   </header>
-    <!-- HEADER SECTION END-->
     <!--HOME SECTION START  -->
     <div id="home">
         <div class="overlay">
@@ -64,13 +44,11 @@
 							  </div>
 							 
 							  <div class="form-group">
-								<label for="date">Date of Purchase:</label>
+								<label for="date">Date of Purchase in the PAST YEAR:</label>
 								<input type="date" class="form-control" id="dop">
-							  </div>
 							 
-							  <div class="form-group">
-								<label for="stocks">Stocks:</label>
-								<input type="number" class="form-control" id="stocks" placeholder="Enter # of Stocks here">
+							  <div class="form-group"> <label for="number">Number of Stocks Purchased in the PAST YEAR:</label>
+								<input type="number" class="form-control" id="stocks" placeholder="# of Stocks">
 							  </div>
 						 
 							  <button type="button" class="btn btn-success" onClick="getData();">Give me Tweet</button>
@@ -78,7 +56,8 @@
     var url = "http://query.yahooapis.com/v1/public/yql";
     var symbol = $("#name").val();
     var startDate = $("#dop").val();
-    var endDate= '2015-04-11';
+	var numStocks = $("#stocks").val();
+    var endDate;
     var str = 'select * from yahoo.finance.historicaldata where symbol in ("' + symbol + '") and startDate = "' + startDate + '" and endDate = "' + endDate + '"';
     var data = encodeURIComponent(str);
 	var old = 0;
@@ -87,6 +66,16 @@
     var dd = today.getDate();
     var mm = today.getMonth()+1; //January is 0!
     var yyyy = today.getFullYear();
+	var difference = 0;
+	var posNeg;
+	var posNeg2;
+	var item = "Golden iWatch"
+	var items = ["Bugatti Veyron", "Apple Phone Gold", "McChicken", "Paperclip","Boeing 747", "Fedora", "Hummer H1", "Jetski",
+	"Garbage Truck", "Stop Sign", "Tiger Cub", "Barel of Jet Fuel", "Rubber Chicken", "Toyota Prius", "Can(s) of Tennis Balls", "Macbook Air",
+	"Macbook Pro", "Beats Headphones", "Luxury Yacht","Ring(s) made of dinosaur bones", "Chipotle Burrito", "Banana", "Gold Bar", "Gumball"];
+	var prices = [2250, 649, 1, 0.01, 357000000, 5, 40500, 7000, 230000, 50, 13400, 90, 5, 25000, 3, 1000, 2000, 200, 5000000, 4000, 
+	7, 0.2, 50000, 0.035];
+	
     if(dd<10) {
         dd='0'+dd
     } 
@@ -98,14 +87,35 @@
     $.getJSON(url, 'q=' + data + "&format=json&diagnostics=true&env=http://datatables.org/alltables.env")
         .done(function (data) {
 		old = parseFloat(data.query.results.quote[data.query.results.quote.length-1].Open);
-        $("#d1").text("Old Price: " + old);
+        //$("#d1").text("Old Price: " + old);
     var data = encodeURIComponent("select * from yahoo.finance.quotes where symbol in ('" + symbol + "')");
 
     $.getJSON(url, 'q=' + data + "&format=json&diagnostics=true&env=http://datatables.org/alltables.env")
         .done(function (data) {
 		curr = parseFloat(data.query.results.quote.LastTradePriceOnly);
-            $('#d2').text("Current Price: " + curr);
-				document.getElementById("link").innerHTML = "<a href=\"https://twitter.com/intent/tweet?button_hashtag=bitcamp&text="+old+" "+curr+"\"class=\"twitter-hashtag-button\">Tweet #Bitcamp</a>";
+            //$('#d2').text("Current Price: " + curr);
+				//if the difference is negative, put it depressing message and change difference to positive for further use. If positive, put it positive message. 
+				difference = curr - old;
+				difference = difference * numStocks;
+				var random = Math.floor((Math.random() * items.length));
+				item = items[random];
+				var price = prices[random];
+				var numBuy = difference/price;
+				numBuy = numBuy.toFixed(5);
+				
+				if(difference < 0) {
+					posNeg = "Because of my silly investments in "+ symbol+ " on "+ startDate +", I could have bought";
+					posNeg2 = "but I dun goofed";
+					numBuy = numBuy * -1.0;
+				}
+				else{
+					posNeg = "Because of my smart investments in "+ symbol + " on "+ startDate +", I can buy";
+					posNeg2 = ". Wow!";
+				}
+				
+				var stringStuffAfter = posNeg+" "+ numBuy+" " +item+" "+posNeg2;
+				window.open("https://twitter.com/intent/tweet?button_hashtag=bitcamp&button_hashtag=StockHumor&text="+stringStuffAfter);
+				//document.getElementById("link").innerHTML = "<a href=\"https://twitter.com/intent/tweet?button_hashtag=bitcamp&text="+posNeg+" "+ numBuy +item+" "+posNeg2+"\"class=\"twitter-hashtag-button\">Tweet #Bitcamp</a>";
         })
         .fail(function (jqxhr, textStatus, error) {
             var err = textStatus + ", " + error;
@@ -127,7 +137,7 @@
 </div>
 							
 
-						<a class="twitter-timeline" href="https://twitter.com/hashtag/bitcamp" data-widget-id="586894716127547392">#bitcamp Tweets</a>
+						<a class="twitter-timeline" href="https://twitter.com/hashtag/stock_humor" data-widget-id="586894716127547392">#stockhumor Tweets</a>
 <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
 
 						<div id="d1">
@@ -228,8 +238,8 @@
                      <h2>Connect With Us!</h2>
                      <div class="space"> </div>
                       <div class="social">
-                        <a href="https://www.facebook.com/bitcmp"><i class="fa fa-facebook "></i></a>
-                        <a href="https://twitter.com/bitcmp"><i class="fa fa-twitter"></i></a>
+                        <a href="http://bit.ly/1e1EYJv" target="_blank"><i class="fa fa-facebook "></i></a>
+                        <a href="https://twitter.com/stock_humor" target="_blank"><i class="fa fa-twitter"></i></a>
 
                     </div>
                 </div>
