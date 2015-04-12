@@ -8,4 +8,4 @@ With curated tweets that are guaranteed to make you laugh (or at least chuckle),
 only accessible but also relatable.
 </br>
 We view the next generation of investors flocking to the companies they are already loyal to and using this 
-tweet generator to 
+tweet generator to either laugh off a loss or show off a win.
