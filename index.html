@@ -66,7 +66,7 @@
 							  <button type="button" class="btn btn-success" onClick="getData();">Give me Tweet</button>
 							  <script> function getData() {
     var url = "http://query.yahooapis.com/v1/public/yql";
-    var symbol = $("#name").val();
+    var symbol = $("#name").val().toUpperCase();
     var startDate = $("#dop").val();
 	var numStocks = $("#stocks").val();
     var endDate;
@@ -81,12 +81,14 @@
 	var difference = 0;
 	var posNeg;
 	var posNeg2;
-	var item = "Golden iWatch"
-	var items = ["Bugatti Veyron", "Apple Phone Gold", "McChicken", "Paperclip","Boeing 747", "Fedora", "Hummer H1", "Jetski",
-	"Garbage Truck", "Stop Sign", "Tiger Cub", "Barel of Jet Fuel", "Rubber Chicken", "Toyota Prius", "Can(s) of Tennis Balls", "Macbook Air",
-	"Macbook Pro", "Beats Headphones", "Luxury Yacht","Ring(s) made of dinosaur bones", "Chipotle Burrito", "Banana", "Gold Bar", "Gumball"];
+	var item;
+	var items = ["Bugatti Veyron", "Apple iPhone Gold", "McChicken", "Paperclip","Boeing 747", "Fedora", "Hummer H1", "Jetski",
+	"Garbage Truck", "Stop Sign", "Tiger Cub", "Barel(s) of Jet Fuel", "Rubber Chicken", "Toyota Prius", "Can(s) of Tennis Balls", "Macbook Air",
+	"Macbook Pro", "Beats Headphones", "Luxury Yacht","Ring(s) made of dinosaur bones", "Chipotle Burrito", "Banana", "Gold Bar", "Gumball",
+	"Oculus Rift", "Llama", "Kevlar Vest", "Bouncy Ball" , "Balloon" , "Poster of KimJungUn" , 
+	"gram(s) of antimatter", "gram(s) of plutonium", "ounce(s) of Iranian beluga caviar"	];
 	var prices = [2250, 649, 1, 0.01, 357000000, 5, 40500, 7000, 230000, 50, 13400, 90, 5, 25000, 3, 1000, 2000, 200, 5000000, 4000, 
-	7, 0.2, 50000, 0.035];
+	7, 0.2, 50000, 0.035, 350, 1500, 300, 0.1, 0.22, 13, 100000000000000, 4000, 1000];
 	
     if(dd<10) {
         dd='0'+dd
@@ -117,15 +119,15 @@
 				
 				if(difference < 0) {
 					posNeg = "Because of my silly investments in "+ symbol+ " on "+ startDate +", I could have bought";
-					posNeg2 = "but I dun goofed";
+					posNeg2 = "but I dun goofed ";
 					numBuy = numBuy * -1.0;
 				}
 				else{
 					posNeg = "Because of my smart investments in "+ symbol + " on "+ startDate +", I can buy";
-					posNeg2 = ". Wow!";
+					posNeg2 = ". Wow! ";
 				}
 				
-				var stringStuffAfter = posNeg+" "+ numBuy+" " +item+"(s) "+posNeg2;
+				var stringStuffAfter = posNeg + " " + numBuy + " " +item+"(s) " + posNeg2;
 				window.open("https://twitter.com/intent/tweet?button_hashtag=stockhumor&text="+stringStuffAfter);
 				//document.getElementById("link").innerHTML = "<a href=\"https://twitter.com/intent/tweet?button_hashtag=bitcamp&text="+posNeg+" "+ numBuy +item+" "+posNeg2+"\"class=\"twitter-hashtag-button\">Tweet #Bitcamp</a>";
         })
