@@ -9,3 +9,5 @@ only accessible but also relatable.
 </br>
 We view the next generation of investors flocking to the companies they are already loyal to and using this 
 tweet generator to either laugh off a loss or show off a win.
+
+Try it out here: http://tauqir.me/StockHumor/
